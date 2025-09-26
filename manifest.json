@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "🎯 Chat Assistant - Das Moderator Tool",
+  "version": "2.0",
+  "description": "Universelles KI-Tool für Chat-Moderatoren. Funktioniert auf jeder Plattform mit eigenem Google Gemini API-Key.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon-16.png",
+      "48": "images/icon-48.png",
+      "128": "images/icon-128.png"
+    }
+  },
+  "options_page": "options.html",
+  "web_accessible_resources": [
+    {
+      "resources": ["images/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

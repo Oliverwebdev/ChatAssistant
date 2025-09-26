@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Chat Assistant</title>
+    <style>
+        body {
+            width: 420px;
+            min-height: 320px;
+            margin: 0;
+            padding: 18px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .suggestions {
+            display: none;
+        }
+
+        .suggestion {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .suggestion:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .suggestion:active {
+            transform: translateY(0px);
+        }
+
+        .suggestion {
+            position: relative;
+        }
+
+        .suggestion-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #FFE066;
+        }
+
+        .suggestion-text {
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.95;
+        }
+
+        .copy-feedback {
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.4);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .copy-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(46, 204, 113, 0.95);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .copy-feedback.show {
+            opacity: 1;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 11px;
+            opacity: 0.6;
+        }
+
+        .status-header {
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.green {
+            background: #4CAF50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+        }
+
+        .status-dot.yellow {
+            background: #FFC107;
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.6);
+        }
+
+        .status-dot.red {
+            background: #f44336;
+            box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
+        }
+
+        .status-dot.blue {
+            background: #2196F3;
+            box-shadow: 0 0 8px rgba(33, 150, 243, 0.6);
+        }
+
+        .status-text {
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* ENHANCED UI STYLES */
+
+        .suggestion.enhanced {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .suggestion.enhanced:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .suggestion.enhanced.copied {
+            animation: copySuccess 1.5s ease;
+        }
+
+        @keyframes copySuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .suggestion-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .title-text {
+            font-weight: 600;
+            font-size: 14px;
+            color: #FFE066;
+        }
+
+        .source-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .source-badge.live {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+
+        .source-badge.fallback {
+            background: rgba(255, 193, 7, 0.3);
+            color: #FFC107;
+            border: 1px solid rgba(255, 193, 7, 0.5);
+        }
+
+        .source-badge.system {
+            background: rgba(33, 150, 243, 0.3);
+            color: #2196F3;
+            border: 1px solid rgba(33, 150, 243, 0.5);
+        }
+
+        .copy-indicator {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            font-size: 11px;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            color: #FFE066;
+            font-weight: 600;
+        }
+
+        .platform-info {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 5px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* SETUP REQUIRED STYLES */
+
+        .setup-required {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .setup-header h2 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #FFE066;
+        }
+
+        .setup-header p {
+            margin: 0 0 20px 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .setup-benefits {
+            margin-bottom: 20px;
+        }
+
+        .benefit {
+            font-size: 13px;
+            margin: 5px 0;
+            opacity: 0.9;
+            text-align: left;
+        }
+
+        .setup-actions {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .setup-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .setup-button.primary {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .setup-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .setup-button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .setup-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* RESPONSIVE IMPROVEMENTS */
+
+        @media (max-height: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .suggestion {
+                margin-bottom: 8px;
+                padding: 10px;
+            }
+        }
+
+        /* ACCESSIBILITY IMPROVEMENTS */
+
+        .suggestion:focus {
+            outline: 2px solid #FFE066;
+            outline-offset: 2px;
+        }
+
+        .setup-button:focus {
+            outline: 2px solid #FFE066;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 Chat Assistant</h1>
+        <p>Universelles Moderator-Tool | Klick → Kopieren → Einfügen</p>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Analysiere Chat-Verlauf...</p>
+    </div>
+
+    <div class="suggestions" id="suggestions">
+        <!-- Dynamisch generierte Vorschläge -->
+    </div>
+
+    <div class="error" id="error" style="display: none;">
+        <p>Fehler beim Laden der Vorschläge. Bitte versuche es erneut.</p>
+    </div>
+
+    <div class="copy-feedback" id="copyFeedback">
+        ✓ In Zwischenablage kopiert!
+    </div>
+
+    <div class="footer">
+        🤝 Von Moderator für Moderatoren | Powered by Gemini AI
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

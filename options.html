@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Assistant - Moderator Setup</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .setup-steps {
+            margin-bottom: 40px;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #FFE066;
+        }
+
+        .step-number {
+            font-weight: 700;
+            font-size: 18px;
+            color: #FFE066;
+            margin-bottom: 8px;
+        }
+
+        .step-content {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .api-key-section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input[type="password"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #FFE066;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255, 224, 102, 0.3);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .button.secondary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .button.secondary:hover {
+            box-shadow: 0 8px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .status-indicator {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.4);
+            color: #4CAF50;
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.4);
+            color: #f44336;
+        }
+
+        .status-warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            color: #FFC107;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .moderator-benefits {
+            background: rgba(255, 224, 102, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 224, 102, 0.3);
+        }
+
+        .benefits-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: #FFE066;
+            margin-bottom: 12px;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefits-list li {
+            padding: 5px 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .benefits-list li:before {
+            content: "✅ ";
+            margin-right: 8px;
+        }
+
+        .google-link {
+            color: #FFE066;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        .google-link:hover {
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 30px;
+        }
+
+        .psychology-note {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 3px solid #667eea;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .loading {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Chat Assistant Setup</h1>
+            <p>Von Moderator für Moderatoren - Dein persönlicher KI-Assistent</p>
+        </div>
+
+        <div class="moderator-benefits">
+            <div class="benefits-title">🚀 Warum Chat Assistant?</div>
+            <ul class="benefits-list">
+                <li>60% weniger Grübeln über die perfekte Antwort</li>
+                <li>Konsistente Qualität auch in der 8. Stunde</li>
+                <li>Funktioniert auf JEDER Chat-Plattform</li>
+                <li>100% kostenlos mit deinem eigenen API-Key</li>
+                <li>1,5 Millionen Token/Monat gratis bei Google</li>
+            </ul>
+        </div>
+
+        <div class="setup-steps">
+            <div class="step">
+                <div class="step-number">Schritt 1</div>
+                <div class="step-content">
+                    Hol dir deinen kostenlosen Google AI Studio API-Key:
+                    <br><br>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="button secondary">
+                        🔗 Google AI Studio öffnen
+                    </a>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Schritt 2</div>
+                <div class="step-content">
+                    Klicke auf "Create API key" → "Create API key in new project"
+                    <br>Den Key kopierst du dann hier rein ⬇️
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Schritt 3</div>
+                <div class="step-content">
+                    Fertig! Das Extension-Icon wird aktiviert und du kannst loslegen.
+                </div>
+            </div>
+        </div>
+
+        <div class="api-key-section">
+            <div class="form-group">
+                <label for="apiKey">🔑 Dein Google Gemini API-Key:</label>
+                <input type="password" id="apiKey" placeholder="AIzaSy... (beginnt immer mit AIzaSy)">
+            </div>
+
+            <div class="psychology-note">
+                💡 <strong>Moderator-Tipp:</strong> Dein API-Key wird nur lokal in deinem Browser gespeichert.
+                Google gibt dir 1,5 Millionen kostenlose Tokens pro Monat - das sind ~50.000 Chat-Antworten!
+            </div>
+
+            <button class="button" onclick="saveApiKey()">💾 API-Key speichern</button>
+            <button class="button secondary" onclick="testApiKey()">🧪 Verbindung testen</button>
+        </div>
+
+        <div id="status" class="hidden"></div>
+
+        <div class="footer">
+            <p>🤝 Made by Moderator for Moderators | Open Source auf GitHub</p>
+        </div>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>
