@@ -31,20 +31,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const input = e.target;
                 let pastedValue = input.value.trim();
 
-                // Automatisch trimmen und cleanen
-                pastedValue = pastedValue.replace(/\s+/g, '');
+                // AGGRESSIVE CLEANING für alle Copy-Paste Probleme
+                pastedValue = pastedValue.replace(/[^\w-]/g, ''); // Nur Buchstaben, Zahlen, - und _
                 input.value = pastedValue;
 
-                console.log('📋 API-Key eingefügt:', {
-                    originalLength: e.target.value.length,
-                    cleanedLength: pastedValue.length,
-                    validFormat: /^[A-Za-z0-9_-]+$/.test(pastedValue)
+                console.log('📋 API-Key eingefügt und bereinigt:', {
+                    originalValue: e.target.value,
+                    cleanedValue: pastedValue,
+                    length: pastedValue.length
                 });
 
-                if (pastedValue.length >= 35 && pastedValue.length <= 50) {
-                    showStatus('✅ API-Key eingefügt und bereinigt! Klick "Speichern" um fortzufahren.', 'warning');
-                } else if (pastedValue) {
-                    showStatus('⚠️ API-Key scheint zu kurz/lang zu sein. Google Keys sind meist 35-50 Zeichen lang.', 'error');
+                if (pastedValue.length >= 30 && pastedValue.length <= 60) {
+                    showStatus('✅ API-Key eingefügt und bereinigt! Klick "Speichern" um fortzufahren.', 'success');
+                } else if (pastedValue.length > 0) {
+                    showStatus(`⚠️ API-Key Länge: ${pastedValue.length} Zeichen. Google Keys sind meist 30-60 Zeichen.`, 'warning');
+                } else {
+                    showStatus('❌ Kein gültiger API-Key erkannt', 'error');
                 }
             }, 100);
         });
@@ -73,7 +75,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // API-KEY SPEICHERN
 async function saveApiKey() {
-    const apiKey = document.getElementById('apiKey').value.trim();
+    let apiKey = document.getElementById('apiKey').value.trim();
+
+    // AGGRESSIVE CLEANING für Copy-Paste Probleme
+    apiKey = apiKey.replace(/[^\w-]/g, ''); // Nur Buchstaben, Zahlen, - und _
 
     if (!apiKey) {
         showStatus('❌ Bitte gib deinen API-Key ein', 'error');
@@ -88,19 +93,23 @@ async function saveApiKey() {
         validChars: /^[A-Za-z0-9_-]+$/.test(apiKey)
     });
 
-    // Einfache Format-Validierung ohne strenge Präfix-Prüfung
-    if (!/^[A-Za-z0-9_-]+$/.test(apiKey)) {
-        showStatus('❌ API-Key enthält ungültige Zeichen. Nur Buchstaben, Zahlen, - und _ erlaubt.', 'error');
+    // DEBUG: Zeige bereinigte Version
+    console.log('🔍 Bereinigter API-Key:', {
+        original: document.getElementById('apiKey').value,
+        cleaned: apiKey,
+        length: apiKey.length
+    });
+
+    if (apiKey.length < 30 || apiKey.length > 60) {
+        showStatus(`❌ API-Key Länge ungültig (${apiKey.length} Zeichen). Google Keys sind meist 30-60 Zeichen`, 'error');
         return;
     }
 
-    if (apiKey.length < 30 || apiKey.length > 50) {
-        showStatus(`❌ API-Key Länge ungültig (${apiKey.length} Zeichen). Erwartet: 30-50 Zeichen`, 'error');
-        return;
-    }
+    // Input-Feld mit bereinigtem Wert aktualisieren
+    document.getElementById('apiKey').value = apiKey;
 
-    if (/\s/.test(apiKey)) {
-        showStatus('❌ API-Key enthält Leerzeichen oder Zeilenumbrüche', 'error');
+    if (!apiKey || apiKey.length < 10) {
+        showStatus('❌ API-Key zu kurz oder ungültig', 'error');
         return;
     }
 
@@ -173,10 +182,10 @@ async function testApiKey() {
 
             showStatus(`✅ Verbindung erfolgreich! KI-Antwort: "${generatedText.trim()}"`, 'success');
 
-            // Psychologie: Erfolg verstärken
+            // Erfolgs-Modal nach 2 Sekunden anzeigen
             setTimeout(() => {
-                showStatus('🎉 Perfekt! Dein Chat Assistant ist einsatzbereit. Geh zu einer beliebigen Chat-Seite und klick das Extension-Icon!', 'success');
-            }, 3000);
+                showSuccessModal();
+            }, 2000);
 
         } else {
             const errorText = await response.text();
@@ -228,6 +237,53 @@ function showStatus(message, type = 'warning', loading = false) {
             statusDiv.classList.add('hidden');
         }, 10000);
     }
+}
+
+// SUCCESS MODAL ANZEIGEN
+function showSuccessModal() {
+    const modal = document.getElementById('successModal');
+    const countdownElement = document.getElementById('countdown');
+
+    // Modal anzeigen
+    modal.classList.remove('hidden');
+
+    // Countdown starten
+    let countdown = 3;
+    countdownElement.textContent = countdown;
+
+    const countdownInterval = setInterval(() => {
+        countdown--;
+        countdownElement.textContent = countdown;
+
+        if (countdown <= 0) {
+            clearInterval(countdownInterval);
+            closeAndRedirect();
+        }
+    }, 1000);
+
+    // Modal bei Klick schließen (sowohl Overlay als auch Content)
+    const overlay = modal.querySelector('.modal-overlay');
+    const content = modal.querySelector('.modal-content');
+
+    const closeHandler = () => {
+        clearInterval(countdownInterval);
+        closeAndRedirect();
+    };
+
+    overlay.addEventListener('click', closeHandler);
+    content.addEventListener('click', closeHandler);
+}
+
+// MODAL SCHLIEßEN UND SETUP-SEITE SCHLIESSEN
+function closeAndRedirect() {
+    const modal = document.getElementById('successModal');
+    modal.classList.add('hidden');
+
+    // Kleine Verzögerung für smooth UX
+    setTimeout(() => {
+        // Setup-Seite schließen
+        window.close();
+    }, 500);
 }
 
 // MODERATOR-PSYCHOLOGIE: Erfolgserlebnis verstärken

@@ -1,7 +1,7 @@
 {
-  "name": "chat-assistant",
+  "name": "dom-walker",
   "version": "2.0.0",
-  "description": "🎯 Chat Assistant - Das Schweizer Taschenmesser für Chat-Moderatoren. Universelles KI-Tool mit eigenem Google Gemini API-Key.",
+  "description": "🎯 DOM Walker - Das Schweizer Taschenmesser für Chat-Moderatoren. Universelles KI-Tool mit eigenem Google Gemini API-Key.",
   "main": "manifest.json",
   "scripts": {
     "dev": "echo '🚀 Development Mode: Load extension in Chrome://extensions/' && echo 'Enable Developer Mode → Load Unpacked → Select this folder'",
@@ -12,10 +12,11 @@
     "lint": "echo '📝 ESLint check...' && npx eslint . || echo '⚠️ ESLint not installed - run: npm install -g eslint'",
     "typecheck": "echo '🔍 TypeScript check...' && npx tsc --noEmit || echo '⚠️ TypeScript not installed - run: npm install -g typescript'",
     "build": "echo '📦 Building production package...' && npm run test && echo '✅ Ready for Chrome Web Store'",
-    "package": "echo '🏪 Creating Chrome Web Store package...' && zip -r chat-assistant-v2.0.0.zip . -x '*.git*' 'node_modules/*' '*.log' '.env*'"
+    "package": "echo '🏪 Creating Chrome Web Store package...' && zip -r dom-walker-v2.0.0.zip . -x '*.git*' 'node_modules/*' '*.log' '.env*'"
   },
   "keywords": [
     "chrome-extension",
+    "dom-walker",
     "chat",
     "moderator",
     "ai",
@@ -25,23 +26,24 @@
     "gaming",
     "support",
     "automation",
-    "productivity"
+    "productivity",
+    "dom-traversal"
   ],
   "author": {
-    "name": "Chat Assistant Team",
-    "email": "community@chat-assistant.dev",
-    "url": "https://github.com/yourusername/chat-assistant"
+    "name": "DOM Walker Team",
+    "email": "community@dom-walker.dev",
+    "url": "https://github.com/yourusername/dom-walker"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/chat-assistant.git"
+    "url": "https://github.com/yourusername/dom-walker.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/chat-assistant/issues",
-    "email": "bugs@chat-assistant.dev"
+    "url": "https://github.com/yourusername/dom-walker/issues",
+    "email": "bugs@dom-walker.dev"
   },
-  "homepage": "https://github.com/yourusername/chat-assistant#readme",
+  "homepage": "https://github.com/yourusername/dom-walker#readme",
   "engines": {
     "node": ">=16.0.0"
   },
@@ -56,7 +58,7 @@
     "manifest_version": 3,
     "platforms_supported": "50+",
     "languages": ["de", "en"],
-    "target_users": "Chat Moderators",
+    "target_users": "Chat Moderators & DOM Navigation Experts",
     "setup_time": "5 minutes",
     "cost": "Free with own API key"
   },

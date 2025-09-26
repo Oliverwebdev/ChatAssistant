@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "🎯 Chat Assistant - Das Moderator Tool",
+  "name": "🎯 DOM Walker - Das Moderator Tool",
   "version": "2.0",
   "description": "Universelles KI-Tool für Chat-Moderatoren. Funktioniert auf jeder Plattform mit eigenem Google Gemini API-Key.",
   "permissions": [
