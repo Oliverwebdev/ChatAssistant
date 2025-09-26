@@ -269,4 +269,4 @@ Wenn es dir hilft → geil. Wenn nicht → kein Drama. Feedback ist immer willko
 
 ---
 
-*🤝 Made with frustration and coffee by a fellow Moderator | 2024*
+*🤝 Made with frustration and coffee by a fellow Moderator | 2025*
