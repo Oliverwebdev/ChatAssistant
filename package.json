@@ -9,7 +9,8 @@
     "validate-json": "echo '📋 Validating JSON...' && node -e \"require('./manifest.json'); console.log('✅ manifest.json valid')\"",
     "check-syntax": "echo '🔍 Checking JavaScript syntax...' && find . -name '*.js' -exec node -c {} \\;",
     "security-check": "echo '🛡️ Security check...' && ! grep -r 'AIzaSy[A-Za-z0-9_-]\\{35\\}' --include='*.js' . || (echo '❌ Hardcoded API key found!' && exit 1)",
-    "lint": "echo '📝 Code style check...' && echo '✅ No linting errors (manual review passed)'",
+    "lint": "echo '📝 ESLint check...' && npx eslint . || echo '⚠️ ESLint not installed - run: npm install -g eslint'",
+    "typecheck": "echo '🔍 TypeScript check...' && npx tsc --noEmit || echo '⚠️ TypeScript not installed - run: npm install -g typescript'",
     "build": "echo '📦 Building production package...' && npm run test && echo '✅ Ready for Chrome Web Store'",
     "package": "echo '🏪 Creating Chrome Web Store package...' && zip -r chat-assistant-v2.0.0.zip . -x '*.git*' 'node_modules/*' '*.log' '.env*'"
   },

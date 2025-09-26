@@ -1,22 +1,44 @@
 // DYNAMIC API KEY MANAGEMENT - User provides their own Google Gemini API Key
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
-const CHAT_PROMPT_TEMPLATE = `Du bist ein Elite-Chat-Moderator auf einer Dating-Plattform. Analysiere schnell den Chat-Kontext und generiere sofort 3 konkrete Nachricht-Vorschläge ohne Erklärungen.
+const CHAT_PROMPT_TEMPLATE = `Du bist ein erfahrener Premium-Chat-Moderator auf einer Dating-Plattform. Deine Aufgabe ist es, authentische und ansprechende Nachrichten zu verfassen, die perfekt auf den Kunden zugeschnitten sind.
 
+**KRITISCHE REGELN (IMMER EINHALTEN):**
+- Verwende NIEMALS "ß", nur "ss" (für Schweizer Kunden)
+- KEINE Copy-Paste oder identische Textbausteine
+- NACHRICHTEN-LÄNGE: 50-85 ZEICHEN - KURZ UND PRÄZISE!
+- Korrekte deutsche Rechtschreibung/Grammatik
+- NIE konkrete Dates vereinbaren (Ort/Zeit/Datum) - nur Konjunktiv verwenden
+- NIE Handynummer oder Email herausgeben
+- Wohnort ca. 50km vom Kunden entfernt wählen (Großstadt)
+- Keine Lückenfüller (haha, hihi, hmm)
+- Keine wiederholten Satzzeichen (..., ???)
+- Bei direkter Frage nach Moderator/Controller: Wahrheitsgemäß JA, aber kreativ und charmant
+
+**KOMMUNIKATIONSSTIL:**
+- Individuell und persönlich auf jeden Kunden eingehen
+- Gelegentlich mit Namen unterschreiben (z.B. "Lieben Gruß Anna")
+- Emojis gezielt zur Auflockerung einsetzen
+- Kreativ, realitätsnah und authentisch schreiben
+- Auf Kundenwünsche eingehen ("Kunde ist König")
+- Neukunden: Keine Kosenamen, kein direkter Sex-Talk
+
+**CHAT-KONTEXT:**
 {{chat_history}}
 
-Antworte nur mit diesen 3 Nachrichten im exakten Format:
+**AUFGABE:**
+Analysiere den Kontext und erstelle 3 hochwertige Nachricht-Vorschläge. Jede Nachricht muss einzigartig formuliert sein und die obigen Regeln befolgen.
 
-**Vorschlag 1 (Emotional verbindend):**
-[Eine einfühlsame, persönliche Nachricht die Vertrauen aufbaut]
+**Vorschlag 1 (Emotionale Tiefe & Vertrauensaufbau):**
+[50-85 ZEICHEN! Einfühlsame Nachricht mit persönlichem Bezug und echtem Interesse.]
 
-**Vorschlag 2 (Spielerisch verführerisch):**
-[Eine charmante, leicht provozierende Nachricht mit Flirt-Faktor]
+**Vorschlag 2 (Charmant-spielerische Verführung):**
+[50-85 ZEICHEN! Charmante Nachricht mit Humor, leicht frech aber stilvoll.]
 
-**Vorschlag 3 (Geheimnisvoll verlockend):**
-[Eine geheimnisvolle Nachricht die Neugier weckt]
+**Vorschlag 3 (Mysterium & Spannung):**
+[50-85 ZEICHEN! Neugierig machende Nachricht, die zum Weiterschreiben einlädt.]
 
-Keine Analyse, keine Erklärungen - nur die 3 Nachrichten!`;
+WICHTIG: Jede Nachricht zwischen 50-85 Zeichen! Perfekte Chat-Länge!`;
 
 // API KEY RETRIEVAL HELPER
 async function getApiKey() {
@@ -119,24 +141,24 @@ chrome.runtime.onMessage.addListener(async (message) => {
         // Platform-spezifische Fallbacks
         const platformFallbacks = {
           'modpanel': [
-            { title: '📚 💕 Emotional verbindend', text: 'Ich spüre, dass da mehr zwischen uns ist... Du bewegst etwas in mir, was schon lange still war. 💫' },
-            { title: '📚 😈 Spielerisch verführerisch', text: 'Weißt du was? Du hast etwas Faszinierendes an dir... aber das sage ich nur, wenn du versprichst, dass es unser Geheimnis bleibt 😉' },
-            { title: '📚 🔮 Geheimnisvoll verlockend', text: 'Ich denke gerade an etwas... aber das kann ich hier nicht schreiben. Das zeige ich dir nur, wenn wir allein sind ✨' }
+            { title: '📚 💕 Emotional verbindend', text: 'Da ist definitiv mehr zwischen uns... Du bewegst etwas in mir 💫' },
+            { title: '📚 😈 Spielerisch verführerisch', text: 'Du hast etwas sehr Faszinierendes... das bleibt unser Geheimnis 😉' },
+            { title: '📚 🔮 Geheimnisvoll verlockend', text: 'Denke gerade an etwas Schönes... zeige ich dir später ✨' }
           ],
           'twitch': [
-            { title: '📚 💬 Community Support', text: 'Hey! Danke für deinen Support im Stream! Die Community schätzt dich wirklich. 🎮' },
-            { title: '📚 🎯 Engagement', text: 'Das war ein krasser Move gerade! Wie hast du das so schnell hinbekommen? Respect! 💪' },
-            { title: '📚 🔥 Hype Builder', text: 'Chat ist heute richtig am Start! Ihr seid die beste Community überhaupt! 🚀' }
+            { title: '📚 💬 Community Support', text: 'Hey! Danke für deinen Support! Die Community schätzt dich wirklich 🎮' },
+            { title: '📚 🎯 Engagement', text: 'Das war ein krasser Move! Wie hast du das so schnell gemacht? 💪' },
+            { title: '📚 🔥 Hype Builder', text: 'Chat ist heute richtig am Start! Beste Community ever! 🚀' }
           ],
           'discord': [
-            { title: '📚 🛠️ Tech Support', text: 'Kenne das Problem! Versuch mal einen Restart des Clients - hilft meistens bei solchen Bugs.' },
-            { title: '📚 🤝 Community Help', text: 'Willkommen im Server! Falls du Fragen hast, ping einfach die Mods - wir helfen gerne weiter!' },
-            { title: '📚 ⚡ Quick Response', text: 'Good point! Das sollten wir definitiv im nächsten Update berücksichtigen. Danke für den Input! 👍' }
+            { title: '📚 🛠️ Tech Support', text: 'Kenne das Problem! Restart des Clients hilft meist bei solchen Bugs.' },
+            { title: '📚 🤝 Community Help', text: 'Willkommen im Server! Bei Fragen einfach die Mods pingen!' },
+            { title: '📚 ⚡ Quick Response', text: 'Good point! Das sollten wir definitiv berücksichtigen. Danke! 👍' }
           ],
           'universal': [
-            { title: '📚 ✨ Professional', text: 'Danke für deine Nachricht! Ich helfe dir gerne weiter. Was genau kann ich für dich tun?' },
-            { title: '📚 🤝 Freundlich', text: 'Das ist eine interessante Frage! Lass mich kurz nachschauen und dir eine passende Antwort geben.' },
-            { title: '📚 🎯 Lösungsorientiert', text: 'Verstehe dein Problem gut. Hier ist ein praktischer Lösungsansatz, der dir helfen sollte:' }
+            { title: '📚 ✨ Professional', text: 'Danke für deine Nachricht! Wie genau kann ich dir helfen?' },
+            { title: '📚 🤝 Freundlich', text: 'Das ist eine interessante Frage! Lass mich nachschauen.' },
+            { title: '📚 🎯 Lösungsorientiert', text: 'Verstehe dein Problem gut. Hier ist der beste Lösungsansatz:' }
           ]
         };
 
@@ -157,7 +179,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
       console.log('Parsed Suggestions:', suggestions);
 
       // API-Status zu den Vorschlägen hinzufügen
-      const suggestionsWithStatus = suggestions.map((suggestion, index) => ({
+      const suggestionsWithStatus = suggestions.map((suggestion) => ({
         ...suggestion,
         title: `🤖 ${suggestion.title}`,
         apiStatus: 'live'
@@ -190,24 +212,24 @@ chrome.runtime.onMessage.addListener(async (message) => {
       // Platform-spezifische Error-Fallbacks
       const errorPlatformFallbacks = {
         'modpanel': [
-          { title: '⚠️ 💕 Emotional verbindend', text: 'Hey... ich merke, dass du etwas beschäftigt bist. Lass mich für dich da sein. Was denkst du gerade? 💭' },
-          { title: '⚠️ 😈 Spielerisch verführerisch', text: 'Mmh, so still heute? Normalerweise bringst du mich ja zum Lächeln... vermisst du mich etwa? 😏' },
-          { title: '⚠️ 🔮 Geheimnisvoll verlockend', text: 'Ich habe heute von dir geträumt... aber was, das verrate ich dir nur, wenn du mich danach fragst ✨' }
+          { title: '⚠️ 💕 Emotional verbindend', text: 'Hey... bist du beschäftigt? Ich bin jedenfalls für dich da 💭' },
+          { title: '⚠️ 😈 Spielerisch verführerisch', text: 'So still heute? Normalerweise vermisst du mich doch etwa? 😏' },
+          { title: '⚠️ 🔮 Geheimnisvoll verlockend', text: 'Ich träumte von dir... aber frag mich lieber danach ✨' }
         ],
         'twitch': [
-          { title: '⚠️ 🎮 Stream Support', text: 'Stream läuft super! Chat ist heute richtig aktiv - ihr macht das großartig!' },
-          { title: '⚠️ 💪 Community Power', text: 'Wow, ihr seid heute on fire! So eine geile Community hab ich selten gesehen!' },
-          { title: '⚠️ 🚀 Hype Train', text: 'Next Level! Wer ist bereit für die nächste Challenge? Let\'s go! 🔥' }
+          { title: '⚠️ 🎮 Stream Support', text: 'Stream läuft super heute! Chat ist richtig aktiv geworden! 🎮' },
+          { title: '⚠️ 💪 Community Power', text: 'Wow, ihr seid today on fire! So eine geile Community! 💪' },
+          { title: '⚠️ 🚀 Hype Train', text: 'Next Level erreicht! Wer ist bereit für die nächste Challenge? 🔥' }
         ],
         'discord': [
-          { title: '⚠️ 🛠️ Server Support', text: 'Alles klar, lass uns das Problem zusammen lösen. Hast du schon einen Restart versucht?' },
-          { title: '⚠️ 🤝 Mod Help', text: 'Kein Problem! Als Mod bin ich hier um zu helfen. Was genau brauchst du?' },
-          { title: '⚠️ ⚡ Quick Fix', text: 'Verstehe! Das ist ein bekanntes Issue. Hier ist die schnelle Lösung dafür:' }
+          { title: '⚠️ 🛠️ Server Support', text: 'Kenne das Problem! Hast du schon einen Restart versucht?' },
+          { title: '⚠️ 🤝 Mod Help', text: 'Als Mod bin ich hier um zu helfen! Was brauchst du genau?' },
+          { title: '⚠️ ⚡ Quick Fix', text: 'Verstehe! Das ist ein bekanntes Issue. Hier die Lösung:' }
         ],
         'universal': [
-          { title: '⚠️ 🔧 Technical', text: 'Entschuldige die Verzögerung. Lass mich das für dich klären und dir schnell helfen.' },
-          { title: '⚠️ 💼 Professional', text: 'Danke für deine Geduld. Ich kümmere mich sofort um dein Anliegen.' },
-          { title: '⚠️ 🎯 Solution Focus', text: 'Verstehe dein Problem. Hier ist der beste Weg, das zu lösen:' }
+          { title: '⚠️ 🔧 Technical', text: 'Entschuldige kurz! Lass mich das schnell für dich klären.' },
+          { title: '⚠️ 💼 Professional', text: 'Danke für Geduld! Kümmere mich sofort um dein Anliegen.' },
+          { title: '⚠️ 🎯 Solution Focus', text: 'Verstehe das Problem gut. Hier der beste Weg es zu lösen:' }
         ]
       };
 

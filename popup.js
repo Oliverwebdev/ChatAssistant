@@ -76,9 +76,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     // Universeller Professional Fallback
                     console.log('Verwende Universellen Professional Fallback');
                     displaySuggestions([
-                        { title: '🔄 ✨ Professional', text: 'Danke für deine Nachricht! Ich helfe dir gerne weiter. Was genau kann ich für dich tun?', apiStatus: 'retry-fallback' },
-                        { title: '🔄 🤝 Hilfsbereit', text: 'Das ist eine interessante Frage! Lass mich kurz nachschauen und dir eine passende Antwort geben.', apiStatus: 'retry-fallback' },
-                        { title: '🔄 🎯 Lösungsorientiert', text: 'Verstehe dein Problem gut. Hier ist ein praktischer Lösungsansatz, der dir helfen sollte.', apiStatus: 'retry-fallback' }
+                        { title: '🔄 ✨ Professional', text: 'Danke für deine Nachricht! Wie genau kann ich dir helfen?', apiStatus: 'retry-fallback' },
+                        { title: '🔄 🤝 Hilfsbereit', text: 'Das ist eine interessante Frage! Lass mich nachschauen.', apiStatus: 'retry-fallback' },
+                        { title: '🔄 🎯 Lösungsorientiert', text: 'Verstehe dein Problem gut. Hier ist der beste Ansatz.', apiStatus: 'retry-fallback' }
                     ], 'fallback-retry', 'Content Script Kommunikation fehlgeschlagen', 'universal');
                 }
             };
@@ -89,9 +89,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Fehler beim Injizieren:', injectError);
             // Professioneller Fallback ohne Content Script
             displaySuggestions([
-                { title: '🚫 ✨ Professional Fallback', text: 'Danke für deine Nachricht! Ich helfe dir gerne weiter und finde eine Lösung für dein Anliegen.', apiStatus: 'injection-failed' },
-                { title: '🚫 🤝 Support Fallback', text: 'Das ist verständlich! Lass mich das für dich klären und dir schnell eine Antwort geben.', apiStatus: 'injection-failed' },
-                { title: '🚫 🎯 Solution Fallback', text: 'Kein Problem! Hier ist ein bewährter Ansatz, der in solchen Situationen meist hilft.', apiStatus: 'injection-failed' }
+                { title: '🚫 ✨ Professional Fallback', text: 'Ich helfe dir gerne weiter und finde eine gute Lösung!', apiStatus: 'injection-failed' },
+                { title: '🚫 🤝 Support Fallback', text: 'Das ist verständlich! Lass mich das schnell klären.', apiStatus: 'injection-failed' },
+                { title: '🚫 🎯 Solution Fallback', text: 'Kein Problem! Hier ist ein bewährter Ansatz dafür.', apiStatus: 'injection-failed' }
             ], 'fallback-injection', 'Content Script konnte nicht injiziert werden', 'universal');
         }
 
@@ -210,7 +210,7 @@ function displaySuggestions(suggestions, source = 'unknown', reason = null, plat
         // COPY INDICATOR
         const copyIndicator = document.createElement('div');
         copyIndicator.className = 'copy-indicator';
-        copyIndicator.innerHTML = '📋 Klicken zum Kopieren';
+        copyIndicator.innerHTML = '📋 Copy on Click';
 
         suggestionDiv.appendChild(titleDiv);
         suggestionDiv.appendChild(textDiv);

@@ -345,25 +345,25 @@ class AdaptiveChatExtractor {
     const demoScenarios = [
       // Szenario 1: Frühe Dating-Phase
       [
-        { text: 'Hey, wie war dein Tag? 😊', sender: 'User', isOwn: false },
-        { text: 'Hallo! War richtig gut, danke 💕 Und bei dir?', sender: 'Moderator', isOwn: true },
+        { text: 'Hey, wie war dein Tag heute? 😊', sender: 'User', isOwn: false },
+        { text: 'War richtig gut, danke! Und bei dir denn so? 💕', sender: 'Moderator', isOwn: true },
         { text: 'Auch gut... dachte gerade an unser Gespräch gestern', sender: 'User', isOwn: false },
         { text: 'Oh ja? Was denn genau? Du machst mich neugierig 😏', sender: 'Moderator', isOwn: true },
-        { text: 'Das sage ich dir nur wenn du versprichst nicht zu lachen', sender: 'User', isOwn: false }
+        { text: 'Das verrat ich dir nur wenn du versprichst nicht zu lachen', sender: 'User', isOwn: false }
       ],
       // Szenario 2: Etablierter Chat
       [
         { text: 'Du siehst heute wieder umwerfend aus ✨', sender: 'User', isOwn: false },
-        { text: 'Mmh, danke... das freut mich wirklich 🥰', sender: 'Moderator', isOwn: true },
-        { text: 'Ich würde dir gerne ein Geschenk machen', sender: 'User', isOwn: false },
-        { text: 'Das ist so süß von dir! Was schwebt dir denn vor?', sender: 'Moderator', isOwn: true },
-        { text: 'Überraschung... aber es ist was Besonderes 💎', sender: 'User', isOwn: false }
+        { text: 'Mmh, danke... das freut mich wirklich sehr 🥰', sender: 'Moderator', isOwn: true },
+        { text: 'Ich würde dir gerne ein kleines Geschenk machen', sender: 'User', isOwn: false },
+        { text: 'Das ist so süss von dir! Was schwebt dir denn vor?', sender: 'Moderator', isOwn: true },
+        { text: 'Eine Überraschung... aber es ist definitiv was Besonderes 💎', sender: 'User', isOwn: false }
       ],
       // Szenario 3: Support/Problem-Lösung
       [
         { text: 'Entschuldige, ich habe ein Problem mit meinem Account', sender: 'User', isOwn: false },
         { text: 'Oh nein, das tut mir leid! Erzähl mir was passiert ist', sender: 'Moderator', isOwn: true },
-        { text: 'Ich kann keine privaten Nachrichten mehr senden', sender: 'User', isOwn: false },
+        { text: 'Ich kann seit heute keine privaten Nachrichten mehr senden', sender: 'User', isOwn: false },
         { text: 'Das schauen wir uns gleich an. Bist du Premium-Member?', sender: 'Moderator', isOwn: true }
       ]
     ];

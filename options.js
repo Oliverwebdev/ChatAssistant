@@ -38,13 +38,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 console.log('📋 API-Key eingefügt:', {
                     originalLength: e.target.value.length,
                     cleanedLength: pastedValue.length,
-                    startsCorrectly: pastedValue.startsWith('AIzaSy')
+                    validFormat: /^[A-Za-z0-9_-]+$/.test(pastedValue)
                 });
 
-                if (pastedValue.startsWith('AIzaSy') && pastedValue.length >= 35) {
+                if (pastedValue.length >= 35 && pastedValue.length <= 50) {
                     showStatus('✅ API-Key eingefügt und bereinigt! Klick "Speichern" um fortzufahren.', 'warning');
                 } else if (pastedValue) {
-                    showStatus('⚠️ Ungültiger API-Key format. Google Keys beginnen mit "AIzaSy"', 'error');
+                    showStatus('⚠️ API-Key scheint zu kurz/lang zu sein. Google Keys sind meist 35-50 Zeichen lang.', 'error');
                 }
             }, 100);
         });
@@ -82,19 +82,20 @@ async function saveApiKey() {
 
     // Erweiterte API-Key Validierung mit Debug-Info
     console.log('🔍 API-Key Validierung:', {
-        startsWithAIzaSy: apiKey.startsWith('AIzaSy'),
         length: apiKey.length,
         firstChars: apiKey.substring(0, 10),
-        hasWhitespace: /\s/.test(apiKey)
+        hasWhitespace: /\s/.test(apiKey),
+        validChars: /^[A-Za-z0-9_-]+$/.test(apiKey)
     });
 
-    if (!apiKey.startsWith('AIzaSy')) {
-        showStatus('❌ API-Key muss mit "AIzaSy" beginnen', 'error');
+    // Einfache Format-Validierung ohne strenge Präfix-Prüfung
+    if (!/^[A-Za-z0-9_-]+$/.test(apiKey)) {
+        showStatus('❌ API-Key enthält ungültige Zeichen. Nur Buchstaben, Zahlen, - und _ erlaubt.', 'error');
         return;
     }
 
-    if (apiKey.length < 35 || apiKey.length > 45) {
-        showStatus(`❌ API-Key Länge ungültig (${apiKey.length} Zeichen). Erwartet: 35-45 Zeichen`, 'error');
+    if (apiKey.length < 30 || apiKey.length > 50) {
+        showStatus(`❌ API-Key Länge ungültig (${apiKey.length} Zeichen). Erwartet: 30-50 Zeichen`, 'error');
         return;
     }
 
@@ -130,7 +131,7 @@ async function testApiKey() {
     console.log('🧪 Test API-Key:', {
         length: apiKey.length,
         firstChars: apiKey.substring(0, 10),
-        startsCorrectly: apiKey.startsWith('AIzaSy')
+        validFormat: /^[A-Za-z0-9_-]+$/.test(apiKey)
     });
 
     if (!apiKey) {
