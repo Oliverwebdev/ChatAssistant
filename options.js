@@ -2,6 +2,61 @@
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🔧 Options Page geladen');
 
+    // Event Listener für Buttons hinzufügen
+    const saveBtn = document.getElementById('saveApiKeyBtn');
+    const testBtn = document.getElementById('testApiKeyBtn');
+    const apiKeyInput = document.getElementById('apiKey');
+
+    if (saveBtn) {
+        saveBtn.addEventListener('click', saveApiKey);
+    }
+
+    if (testBtn) {
+        testBtn.addEventListener('click', testApiKey);
+    }
+
+    // INPUT CLEANER - Entfernt automatisch Whitespace während der Eingabe
+    if (apiKeyInput) {
+        apiKeyInput.addEventListener('input', (e) => {
+            const cleaned = e.target.value.replace(/\s+/g, '');
+            if (cleaned !== e.target.value) {
+                e.target.value = cleaned;
+                showStatus('✨ Leerzeichen automatisch entfernt', 'warning');
+            }
+        });
+
+        // ENHANCED COPY-PASTE OPTIMIZATION für API-Keys
+        apiKeyInput.addEventListener('paste', (e) => {
+            setTimeout(() => {
+                const input = e.target;
+                let pastedValue = input.value.trim();
+
+                // Automatisch trimmen und cleanen
+                pastedValue = pastedValue.replace(/\s+/g, '');
+                input.value = pastedValue;
+
+                console.log('📋 API-Key eingefügt:', {
+                    originalLength: e.target.value.length,
+                    cleanedLength: pastedValue.length,
+                    startsCorrectly: pastedValue.startsWith('AIzaSy')
+                });
+
+                if (pastedValue.startsWith('AIzaSy') && pastedValue.length >= 35) {
+                    showStatus('✅ API-Key eingefügt und bereinigt! Klick "Speichern" um fortzufahren.', 'warning');
+                } else if (pastedValue) {
+                    showStatus('⚠️ Ungültiger API-Key format. Google Keys beginnen mit "AIzaSy"', 'error');
+                }
+            }, 100);
+        });
+
+        // ENTER-KEY SUPPORT
+        apiKeyInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveApiKey();
+            }
+        });
+    }
+
     // Existierenden API-Key laden
     try {
         const result = await chrome.storage.sync.get(['geminiApiKey']);
@@ -25,9 +80,26 @@ async function saveApiKey() {
         return;
     }
 
-    // Basis-Validierung des API-Key Formats
-    if (!apiKey.startsWith('AIzaSy') || apiKey.length < 35) {
-        showStatus('❌ API-Key Format ungültig. Google API-Keys beginnen mit "AIzaSy"', 'error');
+    // Erweiterte API-Key Validierung mit Debug-Info
+    console.log('🔍 API-Key Validierung:', {
+        startsWithAIzaSy: apiKey.startsWith('AIzaSy'),
+        length: apiKey.length,
+        firstChars: apiKey.substring(0, 10),
+        hasWhitespace: /\s/.test(apiKey)
+    });
+
+    if (!apiKey.startsWith('AIzaSy')) {
+        showStatus('❌ API-Key muss mit "AIzaSy" beginnen', 'error');
+        return;
+    }
+
+    if (apiKey.length < 35 || apiKey.length > 45) {
+        showStatus(`❌ API-Key Länge ungültig (${apiKey.length} Zeichen). Erwartet: 35-45 Zeichen`, 'error');
+        return;
+    }
+
+    if (/\s/.test(apiKey)) {
+        showStatus('❌ API-Key enthält Leerzeichen oder Zeilenumbrüche', 'error');
         return;
     }
 
@@ -54,6 +126,12 @@ async function saveApiKey() {
 // API-KEY TESTEN
 async function testApiKey() {
     const apiKey = document.getElementById('apiKey').value.trim();
+
+    console.log('🧪 Test API-Key:', {
+        length: apiKey.length,
+        firstChars: apiKey.substring(0, 10),
+        startsCorrectly: apiKey.startsWith('AIzaSy')
+    });
 
     if (!apiKey) {
         showStatus('❌ Bitte gib zuerst deinen API-Key ein', 'error');
@@ -151,30 +229,15 @@ function showStatus(message, type = 'warning', loading = false) {
     }
 }
 
-// ENTER-KEY SUPPORT
-document.getElementById('apiKey').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        saveApiKey();
-    }
-});
-
 // MODERATOR-PSYCHOLOGIE: Erfolgserlebnis verstärken
 window.addEventListener('beforeunload', () => {
-    const apiKey = document.getElementById('apiKey').value.trim();
-    if (apiKey && apiKey.startsWith('AIzaSy')) {
-        // Positive Verstärkung auch beim Verlassen der Seite
-        console.log('🎯 Moderator hat Setup abgeschlossen - bereit für Chat-Assistenz!');
-    }
-});
-
-// COPY-PASTE OPTIMIZATION für API-Keys
-document.getElementById('apiKey').addEventListener('paste', (e) => {
-    setTimeout(() => {
-        const pastedValue = e.target.value.trim();
-        if (pastedValue.startsWith('AIzaSy') && pastedValue.length > 35) {
-            showStatus('📋 API-Key eingefügt! Klick "Speichern" um fortzufahren.', 'warning');
+    const apiKeyElement = document.getElementById('apiKey');
+    if (apiKeyElement) {
+        const apiKey = apiKeyElement.value.trim();
+        if (apiKey && apiKey.startsWith('AIzaSy')) {
+            console.log('🎯 Moderator hat Setup abgeschlossen - bereit für Chat-Assistenz!');
         }
-    }, 100);
+    }
 });
 
 // ENTWICKLER-MODUS: Shortcuts für Testing

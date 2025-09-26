@@ -130,16 +130,30 @@ function displaySetupRequired() {
             <div class="benefit">✅ 5 Minuten Setup, dann bereit</div>
         </div>
         <div class="setup-actions">
-            <button class="setup-button primary" onclick="openOptionsPage()">
+            <button class="setup-button primary" id="openOptionsBtn">
                 🚀 Jetzt einrichten (2 Min)
             </button>
-            <button class="setup-button secondary" onclick="showSetupHelp()">
+            <button class="setup-button secondary" id="showSetupHelpBtn">
                 ❓ Wie funktioniert das?
             </button>
         </div>
     `;
 
     suggestionsElement.appendChild(setupDiv);
+
+    // Event Listener für Setup-Buttons hinzufügen
+    setTimeout(() => {
+        const openOptionsBtn = document.getElementById('openOptionsBtn');
+        const showSetupHelpBtn = document.getElementById('showSetupHelpBtn');
+
+        if (openOptionsBtn) {
+            openOptionsBtn.addEventListener('click', openOptionsPage);
+        }
+
+        if (showSetupHelpBtn) {
+            showSetupHelpBtn.addEventListener('click', showSetupHelp);
+        }
+    }, 0);
 }
 
 // ENHANCED SUGGESTIONS DISPLAY mit Platform-Information
