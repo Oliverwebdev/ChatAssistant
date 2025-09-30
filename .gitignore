@@ -28,6 +28,7 @@ build/
 # OS Generated
 .DS_Store
 .DS_Store?
+.claude
 ._*
 .Spotlight-V100
 .Trashes
