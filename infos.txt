@@ -1,0 +1,4 @@
+1recovery für chats höher setzten auf 20
+2ebenso kapieren wer ist mod wer ist kd, grau ist kd und blau sind wir rechts sind wir (mod) rechts ist der kd
+3service worker darf nicht modifiziert werden wegen des prompts und deren regeln die sie definieren
+4

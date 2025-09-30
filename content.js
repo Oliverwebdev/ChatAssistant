@@ -653,15 +653,22 @@ class AdaptiveChatExtractor {
       }
     }
 
-    // Platform-spezifische Erkennung
-    if (element.classList.contains('sender') || element.classList.contains('own')) {
+    // Verbesserte Platform-spezifische Erkennung
+    if (element.classList.contains('sender') || element.classList.contains('own') ||
+        element.classList.contains('moderator') || element.classList.contains('mod')) {
       return 'Moderator';
     }
-    if (element.classList.contains('stranger') || element.classList.contains('other')) {
-      return 'User';
+    if (element.classList.contains('stranger') || element.classList.contains('other') ||
+        element.classList.contains('customer') || element.classList.contains('kunde')) {
+      return 'Kunde';
     }
 
-    return 'User';
+    // Basierend auf isOwnMessage Ergebnis
+    if (this.isOwnMessage(element)) {
+      return 'Moderator';
+    }
+
+    return 'Kunde';
   }
 
   isOwnMessage(element) {
@@ -670,14 +677,31 @@ class AdaptiveChatExtractor {
       'outgoing', 'sent', 'right'
     ];
 
-    return ownIndicators.some(indicator =>
+    // Verbesserte Mod-Erkennung basierend auf visuellen Hinweisen
+    const computedStyle = window.getComputedStyle(element);
+    const backgroundColor = computedStyle.backgroundColor;
+    const textAlign = computedStyle.textAlign;
+    const marginLeft = parseInt(computedStyle.marginLeft || 0);
+    const marginRight = parseInt(computedStyle.marginRight || 0);
+
+    // Blaue Hintergründe sind meist Moderator (eigene Nachrichten)
+    const isBlueish = backgroundColor.includes('rgb(0') || backgroundColor.includes('blue') ||
+                      element.style.backgroundColor.includes('blue');
+
+    // Rechtsbündige Nachrichten sind meist eigene
+    const isRightAligned = textAlign === 'right' || marginLeft > marginRight;
+
+    // Klassen-basierte Erkennung
+    const hasOwnClass = ownIndicators.some(indicator =>
       element.classList.contains(indicator) ||
       element.closest(`.${indicator}`) !== null
     );
+
+    return hasOwnClass || isBlueish || isRightAligned;
   }
 
   formatForPrompt(messages, context) {
-    const recentMessages = messages.slice(-14); // Letzte 14 Nachrichten
+    const recentMessages = messages.slice(-20); // Letzte 20 Nachrichten
 
     let formatted = `=== UNIVERSELLER CHAT-KONTEXT ===
 🌐 Platform: ${this.platformConfig.toUpperCase()} (${context.pageStructure.framework})
@@ -686,10 +710,10 @@ class AdaptiveChatExtractor {
 💰 Monetarisierung: ${context.monetization.giftsAvailable ? 'Geschenke verfügbar 🎁' : 'Standard Chat'} ${context.monetization.priceDisplay || ''}
 🎨 Layout: ${context.chatSettings.isDarkMode ? 'Dark Mode' : 'Light Mode'} (${context.pageStructure.isMobile ? 'Mobile' : 'Desktop'})
 
-=== CHAT-VERLAUF (${recentMessages.length}/14 Nachrichten) ===\n`;
+=== CHAT-VERLAUF (${recentMessages.length}/20 Nachrichten) ===\n`;
 
     recentMessages.forEach((msg, index) => {
-      const prefix = msg.isOwn ? '🔵 Moderator' : '⚪ User';
+      const prefix = msg.isOwn ? '🔵 Moderator' : '⚪ Kunde';
       const extras = [];
 
       if (msg.hasImage) extras.push('📸');

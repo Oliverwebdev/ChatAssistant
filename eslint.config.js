@@ -15,7 +15,10 @@ export default [
         navigator: 'readonly',
         NodeFilter: 'readonly',
         performance: 'readonly',
-        Date: 'readonly'
+        Date: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        AbortController: 'readonly'
       }
     },
 
@@ -24,7 +27,6 @@ export default [
       'no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
       'no-undef': 'error',
       'no-redeclare': 'error',
-      'no-duplicate-keys': 'error',
 
       // Chrome Extension Best Practices
       'no-eval': 'error',
